@@ -26,7 +26,7 @@ for PARTITION in "boot" "system" "vendor"; do
 done
 
 VERSION=RaspberryVanillaAOSP16
-DATE=$(date +%Y%m%d)
+DATE=$(date +%Y%m%d_%H%M)
 TARGET=$(echo ${TARGET_PRODUCT} | sed 's/^aosp_//')
 IMGNAME=${VERSION}-${DATE}-${TARGET}.img
 IMGSIZE=15360000000
@@ -116,4 +116,10 @@ sudo losetup -d "/dev/${LOOPDEV}"
 sudo chown ${USER}:${USER} ${ANDROID_PRODUCT_OUT}/${IMGNAME}
 
 echo "Done, created ${ANDROID_PRODUCT_OUT}/${IMGNAME}!"
+
+echo "Zipping image..."
+cd ${ANDROID_PRODUCT_OUT}
+zip -9 ${IMGNAME%.img}.zip ${IMGNAME}
+rm ${IMGNAME}
+echo "Finished creating ${ANDROID_PRODUCT_OUT}/${IMGNAME%.img}.zip"
 exit 0
