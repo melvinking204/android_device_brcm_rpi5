@@ -57,6 +57,7 @@ TARGET_NO_RECOVERY := true
 # SELinux
 BOARD_SEPOLICY_DIRS += device/brcm/rpi5/sepolicy
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE += video=DSI-1:panel_orientation=right
 
 # Treble
 TARGET_COPY_OUT_VENDOR := vendor
