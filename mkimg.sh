@@ -41,8 +41,11 @@ if [ -f ${ANDROID_PRODUCT_OUT}/${IMGNAME} ]; then
   exit_with_error "${ANDROID_PRODUCT_OUT}/${IMGNAME} already exists!"
 fi
 
+# Retrieve sudo password securely
+SUDO_PASSWORD=$(cat ~/.sudo_pass)
+
 echo "Creating image file ${ANDROID_PRODUCT_OUT}/${IMGNAME}..."
-sudo fallocate -l ${IMGSIZE} ${ANDROID_PRODUCT_OUT}/${IMGNAME}
+echo ${SUDO_PASSWORD} | sudo -S fallocate -l ${IMGSIZE} ${ANDROID_PRODUCT_OUT}/${IMGNAME}
 sync
 
 echo "Creating partitions..."
@@ -89,10 +92,10 @@ echo a
 echo 1
 
 echo w
-) | sudo fdisk ${ANDROID_PRODUCT_OUT}/${IMGNAME}
+) | echo ${SUDO_PASSWORD} | sudo -S fdisk ${ANDROID_PRODUCT_OUT}/${IMGNAME}
 sync
 
-LOOPDEV=$(sudo kpartx -av ${ANDROID_PRODUCT_OUT}/${IMGNAME} | awk 'NR==1{ sub(/p[0-9]$/, "", $3); print $3 }')
+LOOPDEV=$(echo ${SUDO_PASSWORD} | sudo -S kpartx -av ${ANDROID_PRODUCT_OUT}/${IMGNAME} | awk 'NR==1{ sub(/p[0-9]$/, "", $3); print $3 }')
 if [ -z ${LOOPDEV} ]; then
   exit_with_error "Unable to find loop device!"
 fi
@@ -100,25 +103,25 @@ echo "Image mounted as /dev/${LOOPDEV}"
 sleep 1
 
 echo "Copying boot..."
-sudo dd if=${ANDROID_PRODUCT_OUT}/boot.img of=/dev/mapper/${LOOPDEV}p1 bs=1M
+echo ${SUDO_PASSWORD} | sudo -S dd if=${ANDROID_PRODUCT_OUT}/boot.img of=/dev/mapper/${LOOPDEV}p1 bs=1M
 echo "Copying system..."
-sudo dd if=${ANDROID_PRODUCT_OUT}/system.img of=/dev/mapper/${LOOPDEV}p5 bs=1M
+echo ${SUDO_PASSWORD} | sudo -S dd if=${ANDROID_PRODUCT_OUT}/system.img of=/dev/mapper/${LOOPDEV}p5 bs=1M
 echo "Copying vendor..."
-sudo dd if=${ANDROID_PRODUCT_OUT}/vendor.img of=/dev/mapper/${LOOPDEV}p6 bs=1M
+echo ${SUDO_PASSWORD} | sudo -S dd if=${ANDROID_PRODUCT_OUT}/vendor.img of=/dev/mapper/${LOOPDEV}p6 bs=1M
 echo "Creating metadata..."
-sudo mkfs.ext4 /dev/mapper/${LOOPDEV}p7 -I 512 -L metadata
+echo ${SUDO_PASSWORD} | sudo -S mkfs.ext4 /dev/mapper/${LOOPDEV}p7 -I 512 -L metadata
 echo "Creating userdata..."
-sudo mkfs.ext4 /dev/mapper/${LOOPDEV}p3 -I 512 -L userdata
+echo ${SUDO_PASSWORD} | sudo -S mkfs.ext4 /dev/mapper/${LOOPDEV}p3 -I 512 -L userdata
 sync
 
-sudo kpartx -d "/dev/${LOOPDEV}"
-sudo losetup -d "/dev/${LOOPDEV}"
-sudo chown ${USER}:${USER} ${ANDROID_PRODUCT_OUT}/${IMGNAME}
+echo ${SUDO_PASSWORD} | sudo -S kpartx -d "/dev/${LOOPDEV}"
+echo ${SUDO_PASSWORD} | sudo -S losetup -d "/dev/${LOOPDEV}"
+echo ${SUDO_PASSWORD} | sudo -S chown ${USER}:${USER} ${ANDROID_PRODUCT_OUT}/${IMGNAME}
 
 echo "Done, created ${ANDROID_PRODUCT_OUT}/${IMGNAME}!"
 
 echo "Zipping image..."
-cd ${ANDROID_PRODUCT_OUT}
+cd ${ANDROID_PRODUCT_OUT} || exit
 zip -9 ${IMGNAME%.img}.zip ${IMGNAME}
 rm ${IMGNAME}
 echo "Finished creating ${ANDROID_PRODUCT_OUT}/${IMGNAME%.img}.zip"
