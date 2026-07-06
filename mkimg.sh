@@ -92,10 +92,10 @@ echo a
 echo 1
 
 echo w
-) | echo ${SUDO_PASSWORD} | sudo -S fdisk ${ANDROID_PRODUCT_OUT}/${IMGNAME}
+(echo ${SUDO_PASSWORD}; echo ""; echo o; echo n; echo p; echo 1; echo ""; echo +${BOOT_PARTITION_SIZE}M; echo n; echo e; echo 2; echo ""; echo +${EXTENDED_PARTITION_SIZE}M; echo n; echo l; echo ""; echo +${SYSTEM_PARTITION_SIZE}M; echo n; echo l; echo ""; echo +${VENDOR_PARTITION_SIZE}M; echo n; echo l; echo ""; echo +${METADATA_PARTITION_SIZE}M; echo n; echo p; echo 3; echo ""; echo ""; echo t; echo 1; echo c; echo a; echo 1; echo w) | sudo -S fdisk ${ANDROID_PRODUCT_OUT}/${IMGNAME}
 sync
 
-LOOPDEV=$(echo ${SUDO_PASSWORD} | sudo -S kpartx -av ${ANDROID_PRODUCT_OUT}/${IMGNAME} | awk 'NR==1{ sub(/p[0-9]$/, "", $3); print $3 }')
+LOOPDEV=$(echo ${SUDO_PASSWORD} | sudo -S kpartx -av ${ANDROID_PRODUCT_OUT}/${IMGNAME} 2>/dev/null | awk 'NR==1{ sub(/p[0-9]$/, "", $3); print $3 }')
 if [ -z ${LOOPDEV} ]; then
   exit_with_error "Unable to find loop device!"
 fi
