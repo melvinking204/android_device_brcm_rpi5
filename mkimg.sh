@@ -29,7 +29,7 @@ VERSION=RaspberryVanillaAOSP16
 DATE=$(date +%Y%m%d_%H%M)
 TARGET=$(echo ${TARGET_PRODUCT} | sed 's/^aosp_//')
 IMGNAME=${VERSION}-${DATE}-${TARGET}.img
-IMGSIZE=15360000000
+IMGSIZE=5368709120
 
 BOOT_PARTITION_SIZE=128
 SYSTEM_PARTITION_SIZE=4096
@@ -127,3 +127,4 @@ zip -9 ${IMGNAME%.img}.zip ${IMGNAME}
 rm ${IMGNAME}
 echo "Finished creating ${ANDROID_PRODUCT_OUT}/${IMGNAME%.img}.zip"
 exit 0
+
