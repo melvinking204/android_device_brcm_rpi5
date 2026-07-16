@@ -42,9 +42,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/tablet_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/tablet_core_hardware.xml
 
+# Inherit from Astra vendor configurations
+$(call inherit-product-if-exists, vendor/astra/astra.mk)
+
 # Device identifier. This must come after all inclusions.
 PRODUCT_DEVICE := rpi5
 PRODUCT_NAME := aosp_rpi5
-PRODUCT_BRAND := Raspberry
-PRODUCT_MODEL := Pi 5
-PRODUCT_MANUFACTURER := Raspberry
+PRODUCT_BRAND := AstraMail
+PRODUCT_MODEL := AstraMail
+PRODUCT_MANUFACTURER := Starlight Networks

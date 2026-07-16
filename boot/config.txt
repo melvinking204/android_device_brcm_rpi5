@@ -10,24 +10,19 @@ camera_auto_detect=1
 # Display
 disable_overscan=1
 
-# Display panel
-#dtoverlay=vc4-kms-dsi-7inch
-#dtoverlay=vc4-kms-dsi-ili79600-10-1inch
-#dtoverlay=vc4-kms-dsi-ili9881-5inch
-#dtoverlay=vc4-kms-dsi-ili9881-7inch
+# Display panel (Waveshare 7-inch Touchscreen DSI - Type A for RPi 5)
+dtoverlay=vc4-kms-dsi-waveshare-panel-v2,7_0_inch_a,swapxy=1,invx=1
 
 # Graphics acceleration
 dtoverlay=vc4-kms-v3d
 dtoverlay=cma,cma-320
 
 # I2C
-#dtparam=i2c_arm=on
-
-# I2S
-#dtparam=i2s=on
+dtparam=i2c_vc=on
+dtparam=i2c_arm=on
 
 # SPI
-#dtparam=spi=on
+dtparam=spi=on
 
 # USB
 dtoverlay=dwc2,dr_mode=peripheral

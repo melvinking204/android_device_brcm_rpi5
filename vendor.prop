@@ -1,4 +1,4 @@
-# Audio
+﻿# Audio
 persist.vendor.audio.device=hdmi0
 ro.boot.audio.tinyalsa.simulate_input=true
 ro.config.media_vol_default=20
@@ -48,7 +48,8 @@ persist.vendor.ffmpeg_codec2.v4l2.h265=true
 
 # Graphics
 vendor.hwc.drm.ctm=DRM_OR_IGNORE
-vendor.hwc.drm.force_mode=1920x1080
+# Remove forced 1080p mode because it breaks 720p/1280p DSI screens
+# vendor.hwc.drm.force_mode=1920x1080
 
 # Lockscreen
 ro.lockscreen.disable.default=true
@@ -65,4 +66,3 @@ ro.boot.hypervisor.vm.supported=1
 
 # Wifi
 ro.boot.wificountrycode=00
-wifi.interface=wlan0
